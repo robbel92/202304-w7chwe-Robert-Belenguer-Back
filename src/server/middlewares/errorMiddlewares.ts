@@ -10,7 +10,10 @@ export const notFoundError = (
   next: NextFunction
 ) => {
   debug("Not found error");
-  const error = new CustomError("Endpoint not found", 404);
+  const error = new CustomError(
+    "Sorry, endpoint notfound please check it",
+    404
+  );
   next(error);
 };
 
