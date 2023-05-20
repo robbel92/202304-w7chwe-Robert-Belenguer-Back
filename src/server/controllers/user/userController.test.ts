@@ -6,18 +6,22 @@ import { Types } from "mongoose";
 import bcrypt from "bcryptjs";
 import { loginUser } from "./userController";
 import { type UserCredentialsRequest, type UserStructure } from "../../types";
+import CustomError from "../../CustomError/CustomError";
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 type CustomResponse = Pick<Response, "status" | "json">;
+
 describe("Given a loginUser middleware", () => {
+  const validUser = {
+    password: "Usnary",
+    username: "Usnary",
+  };
+
   const req: Pick<UserCredentialsRequest, "body"> = {
-    body: {
-      password: "Usnary",
-      username: "Usnary",
-    },
+    body: validUser,
   };
 
   bcrypt.compare = jest.fn().mockResolvedValue(true);
@@ -44,7 +48,7 @@ describe("Given a loginUser middleware", () => {
     status: jest.fn().mockReturnThis(),
     json: jest.fn(),
   };
-  describe("When it  receives with a request with a valid credentials and a response", () => {
+  describe("When it receives a request with a valid credentials", () => {
     test("Then it should call a response's status method with a status code 200", async () => {
       await loginUser(
         req as UserCredentialsRequest,
@@ -54,15 +58,35 @@ describe("Given a loginUser middleware", () => {
 
       expect(res.status).toHaveBeenCalledWith(expectedStatusCode);
     });
+    test("Then it should call the response's method json with token", async () => {
+      await loginUser(
+        req as UserCredentialsRequest,
+        res as Response,
+        next as NextFunction
+      );
+
+      expect(res.json).toHaveBeenCalledWith({ token });
+    });
   });
+  describe("When it receives a invalid credentials and next function", () => {
+    test("Then it should call the next function with error 'Invalid credentials' and status 401", async () => {
+      const error = new CustomError("Invalid credentials", 401);
+      const invalidUser = {
+        password: "Usnary",
+        username: "Uary",
+      };
 
-  test("Then it should call the response's method status with 200", async () => {
-    await loginUser(
-      req as UserCredentialsRequest,
-      res as Response,
-      next as NextFunction
-    );
+      const reqInvalid: Pick<UserCredentialsRequest, "body"> = {
+        body: invalidUser,
+      };
+      bcrypt.compare = jest.fn().mockResolvedValue(false);
+      await loginUser(
+        reqInvalid as UserCredentialsRequest,
+        res as Response,
+        next as NextFunction
+      );
 
-    expect(res.json).toHaveBeenCalledWith({ token });
+      expect(next).toHaveBeenCalledWith(error);
+    });
   });
 });

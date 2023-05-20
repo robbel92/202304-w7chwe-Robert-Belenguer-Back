@@ -16,7 +16,7 @@ export const loginUser = async (
     const user = await User.findOne({ username }).exec();
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      const customError = new CustomError("Not validate credentials", 401);
+      const customError = new CustomError("Invalid credentials", 401);
 
       throw customError;
     }
