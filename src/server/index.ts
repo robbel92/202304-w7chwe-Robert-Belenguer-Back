@@ -3,6 +3,11 @@ import "./loadEnvironment.js";
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
+import userRouter from "./routers/userRouter.js";
+import {
+  generalErrorMiddleware,
+  notFoundError,
+} from "./middlewares/errorMiddlewares.js";
 
 export const app = express();
 
@@ -18,3 +23,8 @@ app.use(express.json());
 app.disable("x-powered-by");
 
 app.use(morgan("dev"));
+
+app.use("/user", userRouter);
+
+app.use(notFoundError);
+app.use(generalErrorMiddleware);
