@@ -4,7 +4,7 @@ import chalk from "chalk";
 import createDebug from "debug";
 import { app } from "./server/index.js";
 import connectToDatabase from "./server/database/connectToDatabase.js";
-const port = process.env.PORT!;
+const port = process.env.PORT ?? 4000;
 
 const debug = createDebug("societ-api:root");
 
