@@ -10,6 +10,11 @@ export interface UserCredentials {
   username: string;
   password: string;
 }
+
+export interface UserCredentialsWithName {
+  name: string;
+  password: string;
+}
 export interface UserStructure {
   _id: string;
   username: string;
