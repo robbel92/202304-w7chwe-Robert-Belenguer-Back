@@ -8,6 +8,7 @@ import {
   generalErrorMiddleware,
   notFoundError,
 } from "./middlewares/errorMiddlewares.js";
+import contactsRouter from "./routers/contactsRouter.js";
 
 export const app = express();
 
@@ -25,6 +26,7 @@ app.disable("x-powered-by");
 app.use(morgan("dev"));
 
 app.use("/user", userRouter);
+app.use("/contacts", contactsRouter);
 
 app.use(notFoundError);
 app.use(generalErrorMiddleware);
