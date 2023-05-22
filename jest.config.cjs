@@ -6,8 +6,10 @@ module.exports = {
   resolver: "jest-ts-webcompat-resolver",
   collectCoverageFrom: [
     "src/**/*.ts",
-    "src/**/*.tsx",
-    "!src/**/index.ts",
-    "!src/server/routers/**/*",
+    "!src/types.ts",
+    "!src/index.ts",
+    "src/server/index.ts",
+    "!src/loadEnvironment.ts",
+    "!src/database/connectToDatabase.ts",
   ],
 };
